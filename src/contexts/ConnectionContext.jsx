@@ -37,6 +37,7 @@ export default function ConnectionContextProvider({ children }) {
   useEffect(() => {
     socket.current = io("https://socket-chat-server-4qhi.onrender.com", {
       autoConnect: false,
+      transports : ['websocket'] 
     });
 
     const onConnect = () => {
