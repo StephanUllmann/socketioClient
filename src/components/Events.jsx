@@ -8,7 +8,7 @@ export function Events() {
       {serverEvents.map((event, index) => (
         <li
           className={`bg-cyan-400 px-4 py-2 block rounded-lg  ${
-            socket.current.id === event.id ? "" : "self-end"
+            socket.current.id === event.id ? "self-end" : ""
           }`}
           key={index}
         >
