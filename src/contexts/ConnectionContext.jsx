@@ -88,6 +88,7 @@ export default function ConnectionContextProvider({ children }) {
       auth: {
         token: `Bearer ${user.token}`,
       },
+      transports : ['websocket']
     });
 
     socket.current.on("connect", onConnect);
