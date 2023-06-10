@@ -82,8 +82,8 @@ export default function ConnectionContextProvider({ children }) {
   useEffect(() => {
     if (!triggerLogin) return;
     if (!user) return setServerEvents([]);
-    socket.current = io("http://localhost:5555", {
-      // https://socket-chat-server-4qhi.onrender.com
+    socket.current = io("https://socket-chat-server-4qhi.onrender.com", {
+      //http://localhost:5555
       autoConnect: false,
       auth: {
         token: `Bearer ${user.token}`,
