@@ -2,22 +2,26 @@ import { useContext } from "react";
 import { ConnectionContext } from "../contexts/ConnectionContext";
 
 export default function SendMessage() {
-  const { setMessage, handleSendMessage, message, isLoading } =
+  const { setMessage, handleSendMessage, message } =
     useContext(ConnectionContext);
   return (
-    <div>
-      <form className="flex gap-4" onSubmit={(e) => handleSendMessage(e)}>
+    <div className="w-9/12 mx-auto">
+      <form
+        className="w-full flex gap-4"
+        onSubmit={(e) => handleSendMessage(e)}
+      >
         <input
-          className="w-96 bg-cyan-700 border-cyan-900 border-2 rounded-lg hover:bg-cyan-800 cursor-pointer text-slate-400 py-3 px-6"
+          className="grow bg-cyan-700 focus:bg-cyan-700 border-cyan-900 border-2 rounded-lg cursor-text  text-slate-400 focus:text-slate-900 py-3 px-6 placeholder:text-stone-300"
           type="text"
           onChange={(e) => setMessage(e.target.value)}
           value={message}
-          placeholder="Type here..."
+          placeholder={`Type here...`}
+          // disabled={!isConnected}
         />
         <button
-          className="bg-cyan-700 border-cyan-900 border-2 rounded-lg hover:bg-cyan-800 cursor-pointer text-slate-400 py-3 px-6"
+          className="bg-cyan-700 border-cyan-900 border-2 rounded-lg hover:bg-cyan-800 cursor-pointer text-slate-400 py-3 px-6 disabled:cursor-not-allowed"
           type="submit"
-          disabled={isLoading}
+          // disabled={isLoading || !isConnected}
         >
           Send
         </button>
