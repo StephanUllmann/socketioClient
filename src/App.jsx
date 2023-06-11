@@ -5,9 +5,12 @@ import Modal from "./components/Modal";
 import SendMessage from "./components/SendMessage";
 import Rooms from "./components/Rooms";
 import { ConnectionContext } from "./contexts/ConnectionContext";
+import { AuthContext } from "./contexts/AuthContext";
+import TicTacToe from "./components/TicTacToe";
 
 function App() {
   const { visitedRoom } = useContext(ConnectionContext);
+  const { user } = useContext(AuthContext);
   return (
     <main className="min-h-screen bg-cyan-900 grid grid-cols-5">
       <Rooms />
@@ -24,6 +27,7 @@ function App() {
           {/* <ConnectionManager /> */}
           <SendMessage />
         </div>
+        {user && visitedRoom === "TicTacToe" && <TicTacToe />}
       </div>
     </main>
   );

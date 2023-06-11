@@ -7,7 +7,7 @@ export default function Rooms() {
   const { currentRoom, setCurrentRoom, joinRoom, leaveRoom, loginRoom } =
     useContext(ConnectionContext);
   const roomInputRef = useRef(null);
-  console.log("user: ", user);
+  // console.log("user: ", user);
   return (
     user && (
       <aside className="col-start-1 col-end-2 max-h-[75vh] mt-32 border-2 border-l-0 border-slate-200 flex flex-col rounded-tr rounded-br items-center">
