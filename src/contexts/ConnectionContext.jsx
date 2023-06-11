@@ -19,6 +19,85 @@ export default function ConnectionContextProvider({ children }) {
   const [currentRoom, setCurrentRoom] = useState("");
   const [visitedRoom, setVisitedRoom] = useState("");
 
+  //////////////////////////////////////
+  // TicTacToe
+  const [activePlayer, setActivePlayer] = useState(null);
+  const [playerOneFields, setPlayerOneFields] = useState([]);
+  const [playerTwoFields, setPlayerTwoFields] = useState([]);
+  const [winner, setWinner] = useState(null);
+  const [opponentName, setOpponentName] = useState("");
+
+  const checkWin = () => {
+    const playerArr = activePlayer === 1 ? playerTwoFields : playerOneFields;
+
+    const vertical = playerArr.reduce((count, field) => {
+      return (
+        count[field.split("-")[0]]
+          ? ++count[field.split("-")[0]]
+          : (count[field.split("-")[0]] = 1),
+        count
+      );
+    }, {});
+
+    const verticalWin =
+      playerArr.length >= 3 && Object.values(vertical).some((val) => val === 3);
+
+    const horizontal = playerArr.reduce((count, field) => {
+      return (
+        count[field.split("-")[1]]
+          ? ++count[field.split("-")[1]]
+          : (count[field.split("-")[1]] = 1),
+        count
+      );
+    }, {});
+
+    const horizontalWin =
+      playerArr.length >= 3 &&
+      Object.values(horizontal).some((val) => val === 3);
+
+    const diagonalDown = ["1-1", "2-2", "3-3"].every((field) =>
+      playerArr.includes(field)
+    );
+    const diagonalUp = ["3-1", "2-2", "1-3"].every((field) =>
+      playerArr.includes(field)
+    );
+    // console.log("checking winner...");
+    if (verticalWin || horizontalWin || diagonalDown || diagonalUp)
+      setWinner(activePlayer === 1 ? 2 : 1);
+  };
+
+  useEffect(() => {
+    checkWin();
+  }, [activePlayer]);
+
+  const resetGame = () => {
+    setActivePlayer((prev) => (prev === 1 ? 2 : 1));
+    setPlayerOneFields([]);
+    setPlayerTwoFields([]);
+    setWinner(null);
+  };
+
+  useEffect(() => {
+    socket.current?.emit("tttPlayerMove", playerOneFields);
+  }, [playerOneFields]);
+
+  const getTTTStart = (num, opponentName) => {
+    console.log("Start: ", num, "opponent: ", opponentName);
+    setActivePlayer(num);
+    setOpponentName(opponentName);
+  };
+
+  const getOpponentsTurn = (opponent, opponentFields) => {
+    console.log(opponent, opponentFields);
+    setPlayerTwoFields(opponentFields);
+    setActivePlayer(1);
+  };
+
+  socket.current?.on("TicTacToeStart", getTTTStart);
+  socket.current?.on("TicTacToeOpponent", getOpponentsTurn);
+
+  ////////////////////////////////////
+
   function connect() {
     if (!user) return;
     socket.current.connect();
@@ -93,7 +172,7 @@ export default function ConnectionContextProvider({ children }) {
   useEffect(() => {
     if (!triggerLogin) return;
     if (!user) return setServerEvents([]);
-    socket.current = io("http://localhost:5555", {
+    socket.current = io("https://socket-chat-server-4qhi.onrender.com", {
       //http://localhost:5555
       autoConnect: false,
       auth: {
@@ -115,6 +194,8 @@ export default function ConnectionContextProvider({ children }) {
       socket.current.off("disconnect", onDisconnect);
       socket.current.off("serverEvent", onServerEvent);
       socket.current.off("get-user-rooms", getUserRooms);
+      socket.current.off("TicTacToeOpponent", getOpponentsTurn);
+      socket.current?.off("TicTacToeStart", getTTTStart);
     };
   }, [triggerLogin]);
 
@@ -139,6 +220,17 @@ export default function ConnectionContextProvider({ children }) {
         visitedRoom,
         leaveRoom,
         loginRoom,
+        activePlayer,
+        setActivePlayer,
+        playerOneFields,
+        setPlayerOneFields,
+        playerTwoFields,
+        setPlayerTwoFields,
+        winner,
+        setWinner,
+        resetGame,
+        opponentName,
+        checkWin,
       }}
     >
       {children}
