@@ -58,10 +58,19 @@ export default function ConnectionContextProvider({ children }) {
     });
   };
 
+  const loginRoom = (room) => {
+    socket.current.emit("join-room", room, (callback) => {
+      setServerEvents(callback.messages ?? []);
+      setVisitedRoom(callback.roomName);
+      setCurrentRoom(callback.roomName);
+    });
+  };
+
   const leaveRoom = () => {
-    if (!currentRoom) return;
+    if (!currentRoom && !visitedRoom) return;
     socket.current.emit("leave-room", currentRoom);
-    setCurrentRoom(null);
+    setServerEvents([]);
+    setCurrentRoom("");
     setVisitedRoom("");
   };
 
@@ -79,31 +88,33 @@ export default function ConnectionContextProvider({ children }) {
     setServerEvents((prev) => [...prev, value]);
   };
 
+  socket.current?.on("get-user-rooms", getUserRooms);
+
   useEffect(() => {
     if (!triggerLogin) return;
     if (!user) return setServerEvents([]);
-    socket.current = io("https://socket-chat-server-4qhi.onrender.com", {
+    socket.current = io("http://localhost:5555", {
       //http://localhost:5555
       autoConnect: false,
       auth: {
         token: `Bearer ${user.token}`,
       },
-      transports : ['websocket']
+      transports: ["websocket"],
     });
 
-    socket.current.on("connect", onConnect);
+    socket.current.on("connection", onConnect);
     socket.current.on("disconnect", onDisconnect);
     socket.current.on("receiveMessages", onServerEvent);
-    socket.current.on("user-rooms", getUserRooms);
 
     socket.current.connect();
     setTriggerLogin(false);
+    console.log(socket.current);
 
     return () => {
-      socket.current.off("connect", onConnect);
+      socket.current.off("connection", onConnect);
       socket.current.off("disconnect", onDisconnect);
       socket.current.off("serverEvent", onServerEvent);
-      socket.current.off("user-rooms", getUserRooms);
+      socket.current.off("get-user-rooms", getUserRooms);
     };
   }, [triggerLogin]);
 
@@ -127,6 +138,7 @@ export default function ConnectionContextProvider({ children }) {
         joinRoom,
         visitedRoom,
         leaveRoom,
+        loginRoom,
       }}
     >
       {children}

@@ -7,7 +7,7 @@ export function Events() {
   const { user } = useContext(AuthContext);
 
   return (
-    <ul className="w-9/12 bg-cyan-700 rounded-lg border-px border-indigo-950 min-h-[4rem] my-2 mx-auto flex flex-col items-start">
+    <ul className="w-9/12 h-1/3 overflow-y-auto bg-cyan-700 rounded-lg border-px border-indigo-950 min-h-[4rem] my-2 mx-auto flex flex-col items-start [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-cyan-950 [&::-webkit-scrollbar-track]:rounded-r-lg [&::-webkit-scrollbar-thumb]:bg-cyan-600 [&::-webkit-scrollbar-thumb]:rounded-r-lg">
       {user &&
         serverEvents.map((event, index) => (
           <li
