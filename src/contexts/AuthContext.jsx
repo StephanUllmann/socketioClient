@@ -26,16 +26,13 @@ export default function AuthContextProvider({ children }) {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-    const res = await fetch(
-      `https://socket-chat-server-4qhi.onrender.com/user/${endpoint}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
-      }
-    );
+    const res = await fetch(`http://localhost:5555/user/${endpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ username, email, password }),
+    });
     const data = await res.json();
     if (!res.ok) {
       console.log("res not ok: ", data);
@@ -57,10 +54,13 @@ export default function AuthContextProvider({ children }) {
   };
 
   const getUserRooms = (rooms) => {
+    console.log("running getRooms");
     setUser((prev) => {
       return { ...prev, rooms };
     });
   };
+
+  // console.log("user: ", user);
 
   useEffect(() => {
     if (!user) {

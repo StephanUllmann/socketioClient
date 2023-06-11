@@ -11,7 +11,7 @@ export default function SendMessage() {
         onSubmit={(e) => handleSendMessage(e)}
       >
         <input
-          className="grow bg-cyan-700 focus:bg-cyan-700 border-cyan-900 border-2 rounded-lg cursor-text  text-slate-400 focus:text-slate-900 py-3 px-6 placeholder:text-stone-300"
+          className="grow bg-cyan-700 focus:bg-cyan-700 border-cyan-900 border-2 rounded-lg cursor-text  text-slate-400 focus:text-slate-50 py-3 px-6 placeholder:text-stone-300"
           type="text"
           onChange={(e) => setMessage(e.target.value)}
           value={message}
