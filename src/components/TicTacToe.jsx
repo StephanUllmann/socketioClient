@@ -74,14 +74,12 @@ export default function TicTacToe() {
               activePlayer === 1 ? "hover:bg-cyan-600" : "cursor-wait"
             }
             ${
-              playerOneFields.includes(field) && activePlayer === 1
-                ? "bg-cyan-300 hover:bg-cyan-300 cursor-auto"
-                : ""
-            }
+              playerOneFields.includes(field) &&
+              "bg-cyan-900 hover:bg-cyan-900 cursor-auto"
+            } 
             ${
-              playerTwoFields.includes(field) && activePlayer === 2
-                ? "bg-teal-300 hover:bg-teal-300 cursor-auto"
-                : ""
+              playerTwoFields.includes(field) &&
+              "bg-teal-900 hover:bg-teal-900 cursor-auto"
             }`}
             onClick={() => {
               if (activePlayer !== 1) return;
