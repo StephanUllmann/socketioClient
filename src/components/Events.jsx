@@ -30,7 +30,7 @@ export function Events() {
             className={`${event.username === user.username ? "self-end" : ""}`}
           >
             <div
-              className={`px-4 py-2 block rounded-lg  ${
+              className={`px-4 py-2 my-px block rounded-lg  ${
                 event.username === user.username
                   ? "self-end bg-cyan-400"
                   : "bg-cyan-500"

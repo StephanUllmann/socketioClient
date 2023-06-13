@@ -112,20 +112,42 @@ export default function ConnectionContextProvider({ children }) {
     setIsConnected(false);
   }
 
+  const getApology = () => {
+    const apologies = [
+      "Sorry that I've spammed your pokefight!",
+      "I will never ever spam or hack your sites again.",
+      "I sincerely apologize for messing with the leaderboard on your pokefight.",
+      "Please forgive me for spamming your server.",
+    ];
+    return apologies[Math.floor(Math.random() * apologies.length)];
+  };
+
   const handleSendMessage = (e) => {
     const time = new Date();
     e.preventDefault();
     setIsLoading(true);
     console.log("submit fired: ", message);
     console.log("to room: ", currentRoom);
-    socket.current.emit("message", message, time, currentRoom, () =>
-      setIsLoading(false)
-    );
-    setServerEvents((prev) => [
-      ...prev,
-      { message, username: user.username, time },
-    ]);
-    setMessage("");
+    if (currentRoom === "Master Reagan" && user.username !== "stephan") {
+      const apology = getApology();
+      socket.current.emit("message", apology, time, currentRoom, () =>
+        setIsLoading(false)
+      );
+      setServerEvents((prev) => [
+        ...prev,
+        { message: apology, username: user.username, time },
+      ]);
+      setMessage("");
+    } else {
+      socket.current.emit("message", message, time, currentRoom, () =>
+        setIsLoading(false)
+      );
+      setServerEvents((prev) => [
+        ...prev,
+        { message, username: user.username, time },
+      ]);
+      setMessage("");
+    }
   };
 
   const joinRoom = () => {
@@ -174,6 +196,7 @@ export default function ConnectionContextProvider({ children }) {
     if (!user) return setServerEvents([]);
     socket.current = io("https://socket-chat-server-4qhi.onrender.com", {
       //http://localhost:5555
+      // https://socket-chat-server-4qhi.onrender.com
       autoConnect: false,
       auth: {
         token: `Bearer ${user.token}`,
