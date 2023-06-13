@@ -18,6 +18,7 @@ export default function ConnectionContextProvider({ children }) {
 
   const [currentRoom, setCurrentRoom] = useState("");
   const [visitedRoom, setVisitedRoom] = useState("");
+  const [currAddedRooms, setCurrAddedRooms] = useState([]);
 
   //////////////////////////////////////
   // TicTacToe
@@ -149,14 +150,17 @@ export default function ConnectionContextProvider({ children }) {
       setMessage("");
     }
   };
-
-  const joinRoom = () => {
+  console.log(currentRoom);
+  const joinRoom = (e) => {
+    e.preventDefault();
+    console.log("Join room fired: ", currentRoom);
     if (!currentRoom) return;
     socket.current.emit("join-room", currentRoom, (callback) => {
       console.log("callback from socket: ", callback);
       setServerEvents(callback.messages ?? []);
       setVisitedRoom(callback.roomName);
     });
+    setCurrAddedRooms((prev) => [...prev, currentRoom]);
   };
 
   const loginRoom = (room) => {
@@ -254,6 +258,7 @@ export default function ConnectionContextProvider({ children }) {
         resetGame,
         opponentName,
         checkWin,
+        currAddedRooms,
       }}
     >
       {children}
